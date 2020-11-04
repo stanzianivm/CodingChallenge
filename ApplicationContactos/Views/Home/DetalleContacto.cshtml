@@ -1,0 +1,72 @@
+﻿@model ApplicationContactos.Models.DTO.ContactoDTO
+@{
+    ViewBag.Title = "Detalle Contacto";
+}
+
+<div class="row text-right m-5">
+    <div class="col">
+        <a class="btn btn-danger" href="@Url.Action("Index", "Home")">
+            <i class="fa fa-arrow-left"></i>
+            Regresar
+        </a>
+    </div>
+</div>
+
+<div class="card text-center m-5">
+    <div class="card-header">
+        <h3>Detalle Contacto</h3>
+    </div>
+    <div class="card-body">
+        <dl class="dl-horizontal">
+            <dt>Nombre</dt>
+            <dd>@Model.Nombre</dd>
+            <dt>Empresa</dt>
+            <dd>@Model.Empresa</dd>
+            <dt>Email</dt>
+            <dd>@Model.Email</dd>
+            <dt>Fecha Nacimiento</dt>
+            <dd>@Model.FechaNacimiento</dd>
+            <dt>Teléfono</dt>
+            <dd>@Model.Telefono</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="card text-center m-5">
+    <div class="card-header">
+        <h3>Dirección</h3>
+    </div>
+    <div class="card-body">
+        <dl class="dl-horizontal">
+            <dt>Calle</dt>
+            <dd>@Model.Direccion.Calle</dd>
+            <dt>Departamento</dt>
+            @if (Model.Direccion.Dpto != null)
+            {
+                <dd>@Model.Direccion.Dpto</dd>
+
+            }
+            else
+            {
+                <dd>-</dd>
+            }
+            <dt>Piso</dt>
+            @if (Model.Direccion.Piso != null)
+            {
+                <dd>@Model.Direccion.Piso</dd>
+
+            }
+            else
+            {
+                <dd>-</dd>
+            }
+            <dt>Número</dt>
+            <dd>@Model.Direccion.NumeroCasa</dd>
+            <dt>Provincia</dt>
+            <dd>@Model.Direccion.Ciudad.Provincia.Nombre</dd>
+            <dt>Ciudad</dt>
+            <dd>@Model.Direccion.Ciudad.Nombre</dd>
+        </dl>
+    </div>
+</div>
+

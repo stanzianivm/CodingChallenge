@@ -1,0 +1,185 @@
+﻿@model List<ApplicationContactos.Models.DTO.ContactoDTO>
+@{
+    ViewBag.Title = "Contacto";
+}
+
+    <div class="col text-right" style="margin: 28px;">
+        <a class="btn btn-primary" href="@Url.Action("AddContacto", "Home")">
+            <i class="fa fa-plus"></i>
+            Agregar
+        </a>
+    </div>
+
+
+@using (Html.BeginForm())
+{
+    <div class="row" style=" padding: 0px 0px 0px 13px; margin: 20px; display:flex">
+        <div class="col-md-2 col-lg-5ths col-xs-6 col-sm-4" style="margin-right: 0px;">
+            <label for="basic-url" style="margin:0px -4px 10px 0px">Provincia</label>
+            <div class="input-group">
+                <select id="idProvincia" name="idProvincia" style="height: 30px; width: 145px;">
+                </select>
+                @Html.Hidden("ProvinciaOption")
+            </div>
+        </div>
+
+        <div class="col-md-2 col-lg-5ths col-xs-6 col-sm-4" style="margin-right: 0px;">
+            <label for="basic-url" style="margin:0px -4px 10px 0px">Ciudad</label>
+            <div class="input-group">
+                <select name="idCiudad" id="idCiudad" style="height: 30px; width: 145px;">
+                </select>
+                @Html.Hidden("CiudadOption")
+            </div>
+        </div>
+
+        <div class="col-md-2 col-lg-5ths col-xs-6 col-sm-4" style="margin-right: 50px;">
+            <label for="basic-url" style="margin:0px 0px 10px 0px">Teléfono</label>
+            <div class="input-group">
+                @Html.TextBox("Telefono")
+            </div>
+        </div>
+
+        <div class="col-md-2 col-lg-5ths col-xs-6 col-sm-4" style="margin-right: 50px;">
+            <label for="basic-url" style="margin:0px 0px 10px 0px">Email</label>
+            <div class="input-group">
+                @Html.TextBox("Email")
+
+            </div>
+        </div>
+
+        <div class="col col-2" style="margin:30px 0px 0px 0px; margin-left: -16px">
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" style="margin-left: 18px;">Consultar</button>
+            </div>
+        </div>
+
+    </div>
+}
+
+@if (Model.Count > 0)
+{
+    <table class="table m-5">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Email</th>
+                <th scope="col">Fecha Nacimiento</th>
+                <th scope="col">Teléfono</th>
+                <th scope="col">Provincia</th>
+                <th scope="col">Ciudad</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var contacto in Model)
+            {
+            <tr>
+                <td>@(contacto.Nombre)</td>
+                <td>@(contacto.Email)</td>
+                <td>@(contacto.FechaNacimiento)</td>
+                <td>@(contacto.Telefono)</td>
+                <td>@(contacto.Direccion.Ciudad.Provincia.Nombre)</td>
+                <td>@(contacto.Direccion.Ciudad.Nombre)</td>
+                <td>
+                    <a class="btn btn-warning" href="@Url.Action("DetalleContacto", "Home", new { id = contacto.ContactoId })">
+                        <i class="fa fa-eye"></i>
+                    </a>
+                    <a class="btn btn-info" href="@Url.Action("ModifiedContacto", "Home", new { id = contacto.ContactoId })">
+                        <i class="fa fa-pen"></i>
+                    </a>
+                    <a class="btn btn-danger" href="@Url.Action("DeleteContacto", "Home", new { id = contacto.ContactoId })">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="card">
+        <h3 class="card-header" style="background-color: #cfe8fa">No hay contactos para mostrar</h3>
+        <div class="card-body">
+            <p class="card-text">Usted puede agregar un contacto haciendo click en el botón agregar</p>
+        </div>
+    </div>
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        CargarComboProvincia();
+        CargarComboCiudad();
+
+        $("#idCiudad").change(function () {
+            var ciudad = document.getElementById("CiudadOption");
+            ciudad.value = document.getElementById("idCiudad").value;
+        });
+
+        $("#idProvincia").change(function () {
+            var ciudad = document.getElementById("ProvinciaOption");
+            ciudad.value = document.getElementById("idProvincia").value;
+        });
+    });
+
+    function CargarComboProvincia() {
+        $.ajax({
+            url: "../Home/GetProvincias",
+            data: {},
+            dataType: "json",
+            type: "GET",
+            success: function (data) {
+                DatosDelServidor = data;
+                var select = document.getElementsByName("idProvincia")[0];
+
+                var option = document.createElement("option");
+                option.text = 'Seleccione'
+                option.value = 0;
+                select.add(option);
+
+                for (var i = 0; i < DatosDelServidor.length; i++) {
+                    var option = document.createElement("option");
+                    option.text = DatosDelServidor[i].Nombre;
+                    option.value = DatosDelServidor[i].ProvinciaId;
+                    select.add(option);
+                }
+                //var yourSelect = document.getElementById("your-select-id");
+                //alert(yourSelect.options[yourSelect.selectedIndex].value)
+            },
+            error: function (ex) {
+                console.log("No se ha podido obtener la información", ex);
+            }
+        });
+    }
+
+    function CargarComboCiudad() {
+        $.ajax({
+            url: "../Home/GetCiudades",
+            data: {},
+            dataType: "json",
+            type: "GET",
+            success: function (data) {
+                DatosDelServidor = data;
+                var select = document.getElementsByName("idCiudad")[0];
+
+                var option = document.createElement("option");
+                option.text = 'Seleccione'
+                option.value = 0;
+                select.add(option);
+
+                for (var i = 0; i < DatosDelServidor.length; i++) {
+                    var option = document.createElement("option");
+                    option.text = DatosDelServidor[i].Nombre;
+                    option.value = DatosDelServidor[i].CiudadId;
+                    select.add(option);
+                }
+                //var yourSelect = document.getElementById("your-select-id");
+                //alert(yourSelect.options[yourSelect.selectedIndex].value)
+            },
+            error: function (ex) {
+                console.log("No se ha podido obtener la información", ex);
+            }
+        });
+    }
+
+</script>

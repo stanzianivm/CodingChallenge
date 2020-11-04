@@ -1,0 +1,293 @@
+﻿@model ApplicationContactos.Models.DTO.ContactoDTO
+@{
+    ViewBag.Title = "Modificar Contacto";
+}
+
+<style>
+    .error {
+        color: red;
+    }
+</style>
+
+<div class="row text-right m-5">
+    <div class="col">
+        <a class="btn btn-danger" href="@Url.Action("Index", "Home")">
+            <i class="fa fa-arrow-left"></i>
+            Regresar
+        </a>
+    </div>
+</div>
+
+<div class="tab-content m-5">
+    <div role="tabpanel" class="tab-pane active" id="informacion">
+        <h3>Datos Personales</h3><br />
+        @using (Html.BeginForm("Modified", "Home", FormMethod.Post, new { id = "ContactoForm" }))
+        {
+            @Html.HiddenFor(x => x.ContactoId)
+            @Html.HiddenFor(x => x.DireccionId)
+            @Html.HiddenFor(x => x.Direccion.DireccionId)
+            @*@Html.HiddenFor(x => x.Direccion.CiudadId)*@
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Nombre)
+                @Html.TextBoxFor(x => x.Nombre, new { @id = "idNombre", @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.Nombre, null, new { @class = "label label-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(x => x.Empresa)
+                @Html.TextBoxFor(x => x.Empresa, new { @id = "idEmpresa", @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.Empresa, null, new { @class = "label label-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(x => x.Email)
+                @Html.TextBoxFor(x => x.Email, new { @id = "idEmail", @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.Email, null, new { @class = "label label-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(x => x.FechaNacimiento)
+                @Html.TextBoxFor(x => x.FechaNacimiento, new { @id = "idFechaNacimiento", @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.FechaNacimiento, null, new { @class = "label label-danger" })
+            </div>
+            <div class="form-group">
+                @Html.Label("Teléfono")
+                @Html.TextBoxFor(x => x.Telefono, new { @id = "idTelefono", @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.Telefono, null, new { @class = "label label-danger" })
+            </div>
+            <br />
+            <hr />
+
+            <h3>Dirección</h3><br />
+            <div class="form-group">
+                @Html.LabelFor(x => x.Direccion.Calle)
+                @Html.TextBoxFor(x => x.Direccion.Calle, new { @id = "idCalle", @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.Direccion.Calle, null, new { @class = "label label-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(x => x.Direccion.Dpto)
+                @Html.TextBoxFor(x => x.Direccion.Dpto, new { @id = "idDepto", @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.Direccion.Dpto, null, new { @class = "label label-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(x => x.Direccion.Piso)
+                @Html.TextBoxFor(x => x.Direccion.Piso, new { @id = "idPiso", @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.Direccion.Piso, null, new { @class = "label label-danger" })
+            </div>
+            <div class="form-group">
+                @Html.Label("Número")
+                @Html.TextBoxFor(x => x.Direccion.NumeroCasa, new { @id = "idNumero", @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.Direccion.NumeroCasa, null, new { @class = "label label-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.Label("Provincia")
+                <select class="form-control" id="idProvincia" name="idProvincia">
+                </select>
+            </div>
+            <div class="form-group">
+                @Html.Label("Ciudad")
+                <select class="form-control" id="idCiudad" name="idCiudad">
+                </select>
+                @Html.HiddenFor(x => x.Direccion.CiudadId, new { @id = "CiudadOption" })
+            </div>
+            <br />
+            <div class="text-right">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+        }
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.js"></script>
+
+<script>
+    var userProvId = @Model.Direccion.Ciudad.ProvinciaId;
+    var userCiudadId = @Model.Direccion.Ciudad.CiudadId;
+
+    $(document).ready(function () {
+
+        CargarComboProvincia();
+        CargarComboCiudad();
+
+        var rules = new Object();
+        var messages = new Object();
+
+        $('#idNombre').each(function () {
+            rules[this.name] = { required: true };
+            messages[this.name] = { required: 'Debe seleccionar un nombre' };
+        });
+        $('#idEmpresa').each(function () {
+            rules[this.name] = { required: true };
+            messages[this.name] = { required: 'Debe seleccionar una empresa' };
+        });
+        $('#idProvincia').each(function () {
+            rules[this.name] = { required: true };
+            messages[this.name] = { required: 'Debe seleccionar una provincia' };
+        });
+        $('#idCiudad').each(function () {
+            rules[this.name] = { required: true };
+            messages[this.name] = { required: 'Debe seleccionar una ciudad' };
+        });
+        $('#idEmail').each(function () {
+            rules[this.name] = { required: true, email: true };
+            messages[this.name] = { required: 'Debe seleccionar un email', email: "Ingrese un formato correcto" };
+        });
+        $('#idFechaNacimiento').each(function () {
+            rules[this.name] = { required: true };
+            messages[this.name] = { required: 'Debe seleccionar una fecha nacimiento' };
+        });
+        $('#idTelefono').each(function () {
+            rules[this.name] = { required: true, digits: true };
+            messages[this.name] = { required: 'Debe seleccionar un teléfono', digits: "Ingresar solo números" };
+        });
+        $('#idCalle').each(function () {
+            rules[this.name] = { required: true };
+            messages[this.name] = { required: 'Debe seleccionar una calle' };
+        });
+        $('#idNumero').each(function () {
+            rules[this.name] = { required: true, digits: true };
+            messages[this.name] = { required: 'Debe seleccionar un número', digits: "Ingresar solo números" };
+        });
+        $('#idPiso').each(function () {
+            rules[this.name] = { digits: true };
+            messages[this.name] = { digits: "Ingresar solo números" };
+        });
+        $('#idDepto').each(function () {
+            rules[this.name] = { digits: true };
+            messages[this.name] = { digits: "Ingresar solo números" };
+        });
+
+        validator = $("#ContactoForm").validate({
+            ignore: [],
+            rules: rules,
+            messages: messages,
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+
+        $("#idProvincia").change(function () {
+            var id = document.getElementById("idProvincia").value;
+            $("#idCiudad").val([]);
+            $("#idCiudad").empty();
+
+            $.ajax({
+                url: "../Home/GetCiudadesByProvinciaId",
+                data: { id },
+                dataType: "json",
+                type: "GET",
+                success: function (data) {
+                    DatosDelServidor = data;
+                    var select = document.getElementsByName("idCiudad")[0];
+
+                    var option = document.createElement("option");
+                    option.text = 'Seleccione una Ciudad'
+                    option.value = '';
+                    select.add(option);
+
+                    for (var i = 0; i < DatosDelServidor.length; i++) {
+                        console.log(DatosDelServidor[i].CiudadId);
+                        var option = document.createElement("option");
+                        option.text = DatosDelServidor[i].Nombre;
+                        option.value = DatosDelServidor[i].CiudadId;
+                        select.add(option);
+                    }
+                },
+                error: function (ex) {
+                    console.log("No se ha podido obtener la información", ex);
+                }
+            });
+        });
+
+        $("#idCiudad").change(function () {
+            var ciudad = document.getElementById("CiudadOption");
+            if (document.getElementById("idCiudad").value == 0) {
+                ciudad.value = '';
+            } else {
+                ciudad.value = document.getElementById("idCiudad").value;
+            }
+        });
+
+    });
+
+    function CargarComboProvincia() {
+        $.ajax({
+            url: "../Home/GetProvincias",
+            data: {},
+            dataType: "json",
+            type: "GET",
+            success: function (data) {
+                DatosDelServidor = data;
+                var select = document.getElementsByName("idProvincia")[0];
+
+                var option = document.createElement("option");
+                option.text = 'Seleccione'
+                option.value = 0;
+                select.add(option);
+
+                for (var i = 0; i < DatosDelServidor.length; i++) {
+                    if (DatosDelServidor[i].ProvinciaId == userProvId) {
+                        var option = document.createElement("option");
+                        option.text = DatosDelServidor[i].Nombre;
+                        option.value = DatosDelServidor[i].ProvinciaId;
+                        option.selected = true;
+                        select.add(option);
+                    } else {
+                        var option = document.createElement("option");
+                        option.text = DatosDelServidor[i].Nombre;
+                        option.value = DatosDelServidor[i].ProvinciaId;
+                        select.add(option);
+                    }
+
+                }
+
+            },
+            error: function (ex) {
+                console.log("No se ha podido obtener la información", ex);
+            }
+        });
+    }
+
+    function CargarComboCiudad() {
+        $.ajax({
+            url: "../Home/GetCiudadesByProvinciaId",
+            data: { id: userProvId },
+            dataType: "json",
+            type: "GET",
+            success: function (data) {
+                DatosDelServidor = data;
+                var select = document.getElementsByName("idCiudad")[0];
+
+                var option = document.createElement("option");
+                option.text = 'Seleccione'
+                option.value = 0;
+                select.add(option);
+
+                for (var i = 0; i < DatosDelServidor.length; i++) {
+                    console.log(userCiudadId);
+
+                    if (DatosDelServidor[i].CiudadId == userCiudadId) {
+                        var option = document.createElement("option");
+                        option.text = DatosDelServidor[i].Nombre;
+                        option.value = DatosDelServidor[i].CiudadId;
+                        option.selected = true;
+                        select.add(option);
+                    } else {
+                        var option = document.createElement("option");
+                        option.text = DatosDelServidor[i].Nombre;
+                        option.value = DatosDelServidor[i].CiudadId;
+                        select.add(option);
+                    }
+
+                }
+
+            },
+            error: function (ex) {
+                console.log("No se ha podido obtener la información", ex);
+            }
+        });
+    }
+
+</script>
+
+
