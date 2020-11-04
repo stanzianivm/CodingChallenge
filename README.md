@@ -19,17 +19,17 @@ y poder reforzarlos como también poder adquirir nuevos.
 
 ---------------------------------------------------------------------------------
 
-GET /contacto
+## GET /contacto
 Path: https://localhost:44331/api/contacto?telefono=123456&email=juan@algo.com&provinciaId=2&ciudadId=3
 Detalle: Este endpoint retorna una lista de contactos de acuerdo a los parametros asignados para busqueda, todos ellos son opcionales.
 Parametros:
-telefono:string;
-email: string
-provinciaId: numero;
-ciudadId: numero;
+-telefono:string;
+-email: string
+-provinciaId: numero;
+-ciudadId: numero;
 
 Response: 200 OK
-
+```
 [
         {
         "contactoId": 11,
@@ -60,12 +60,13 @@ Response: 200 OK
         }
     }
 ]
-
+```
 ---------------------------------------------------------------------------------
 
-POST /contacto
+## POST /contacto
 Path: https://localhost:44331/api/contacto
 Body:
+```
 {
     "nombre": "victorr",
     "empresa": "soft",
@@ -81,9 +82,10 @@ Body:
         "numeroCasa": 772
     }
 }
+```
 
 Response: 201 Created
-
+```
 {
     "contactoId": 13,
     "nombre": "Sofia",
@@ -103,9 +105,9 @@ Response: 201 Created
         "ciudad": null
     }
 }
-
+```
 Response Error: 400 Bad Request
-
+```
 {
     "errors": {
         "Nombre": [
@@ -117,12 +119,13 @@ Response Error: 400 Bad Request
     "status": 400,
     "traceId": "|9a14a138-4d1db5f1b77ca5b6."
 }
-
+```
 ---------------------------------------------------------------------------------
 
-PUT /contacto
+## PUT /contacto
 Path: https://localhost:44331/api/contacto
 Body: 
+```
 {
     "contactoId": 13,
     "nombre": "Sofia",
@@ -142,10 +145,11 @@ Body:
         "ciudad": null
     }
 }
-
+```
 Response: 204 No Content
 
 Error:
+```
 {
     "errors": {
         "Nombre": [
@@ -157,21 +161,22 @@ Error:
     "status": 400,
     "traceId": "|d31c4c73-461cc7bc50d2f06d."
 }
-
+```
 ---------------------------------------------------------------------------------
-DELETE /contacto/{id}
+## DELETE /contacto/{id}
 Path: https://localhost:44331/api/contacto/13
 
 Response: 204 No Content
 
 ---------------------------------------------------------------------------------
-GET /contacto/{id}
+## GET /contacto/{id}
 Detalle: Este endpoint retorna un contacto de acuerdo al id pasado por parámetro
 Parametros:
-id: int;
+-id: int;
 Path: https://localhost:44331/api/contacto/14
 
 Response: 200 OK
+```
 {
     "contactoId": 14,
     "nombre": "Martin",
@@ -200,13 +205,14 @@ Response: 200 OK
         }
     }
 }
-
+```
 ---------------------------------------------------------------------------------
-GET /ciudad
+## GET /ciudad
 Detalle: Este endpoint retorna una lista de ciudades
 Path: https://localhost:44331/api/ciudad
 
 Response: 200 OK
+```
 [
     {
         "ciudadId": 2,
@@ -237,15 +243,16 @@ Response: 200 OK
         "provincia": null
     }
 ]
-
+```
 ---------------------------------------------------------------------------------
-GET /ciudad/GetAllByProvinciaId?provId={id}
+## GET /ciudad/GetAllByProvinciaId?provId={id}
 Detalle: Este endpoint retorna una lista de ciudades que pertenecen a una provincia. El id de la provincia es pasado por parámetro.
 Path: https://localhost:44331/api/ciudad/GetAllByProvinciaId?provId=1
 Parametros:
-provId: int
+-provId: int
 
 Response: 200 OK
+```
 [
     {
         "ciudadId": 2,
@@ -262,15 +269,16 @@ Response: 200 OK
         "provincia": null
     }
 ]
-
+```
 ---------------------------------------------------------------------------------
-GET /ciudad
+## GET /ciudad
 Detalle: Este endpoint retorna una ciudad de acuerdo al id pasado por parámetro
 Parametros:
-id: int;
+-id: int;
 Path: https://localhost:44331/api/ciudad/1
 
 Response: 200 OK
+```
 {
     "ciudadId": 1,
     "nombre": "La Plata",
@@ -281,13 +289,14 @@ Response: 200 OK
         "nombre": "Buenos Aires"
     }
 }
-
+```
 ---------------------------------------------------------------------------------
-GET /provincia
+## GET /provincia
 Detalle: Este endpoint retorna una lista de provincias
 Path: https://localhost:44331/api/provincia
 
 Response: 200 OK
+```
 [
     {
         "provinciaId": 1,
@@ -298,5 +307,5 @@ Response: 200 OK
         "nombre": "Cordoba"
     }
 ]
-
+```
 
