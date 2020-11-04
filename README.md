@@ -29,7 +29,7 @@ provinciaId: numero;
 ciudadId: numero;
 
 Response: 200 OK
-
+```
 [
         {
         "contactoId": 11,
@@ -60,7 +60,7 @@ Response: 200 OK
         }
     }
 ]
-
+```
 ---------------------------------------------------------------------------------
 
 POST /contacto
